@@ -3,7 +3,18 @@ syntax = "proto3";
 package parking;
 
 service ParkingSensorService {
+    rpc CheckAvailability(AvailabilityRequest) returns (AvailabilityResponse);
+    rpc StreamOccupancyUpdates(OccupancyRequest) returns (stream OccupancyUpdate);
+}
 
+message AvailabilityRequest {}
 
-    
+message AvailabilityResponse {
+    int32 freeSlots = 1;
+}
+
+message OccupancyRequest {}
+
+message OccupancyUpdate {
+    string message = 1;
 }
