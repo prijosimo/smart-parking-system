@@ -27,7 +27,7 @@ message CancelResponse {
     string message = 2;
 }
 
-message NoteChunck {
+message NoteChunk {
     string content = 1;
 }
 
