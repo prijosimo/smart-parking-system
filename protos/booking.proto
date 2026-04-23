@@ -3,5 +3,36 @@ syntax = "proto3";
 package booking;
 
 service BookingService {
-    
+    rpc CreateBooking(BookingRequest) returns (BookingResponse);
+    rpc CancelBooking(CancelRequest) returns (CancelResponse);
+    rpc UploadBookingNotes(stream NoteChunck) returns (UploadStatus);
 }
+
+message BookingRequest {
+    string vehicleId = 1;
+    string slotId = 2;
+}
+
+message BookingResponse {
+    string bookingId = 1;
+    string message = 2;
+}
+
+message CancelRequest {
+    string bookingId = 1;
+}
+
+message CancelResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message NoteChunck {
+    string content = 1;
+}
+
+message UploadStatus {
+    bool success = 1;
+    string message = 2;
+}
+
