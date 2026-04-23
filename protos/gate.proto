@@ -3,5 +3,34 @@ syntax = "proto3";
 package gate;
 
 service GateControlService {
-    
+    rpc RequestEntry(EntryRequest) returns (EntryResponse);
+    rpc NotifyExit(ExitRequest) returns (ExitResponse);
+    rpc MonitorGate(stream GateEvent) returns (stream GateStatus);
 }
+
+message EntryRequest {
+    string vehicleId = 1;
+}
+
+message EntryResponse {
+    bool allowed = 1;
+    string message = 2;
+}
+
+message ExitRequest {
+    string vehicleId = 1;
+}
+
+message ExitResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GateEvent {
+    string event = 1;
+}
+
+message GateStatus {
+    string status = 1;
+}
+
