@@ -15,10 +15,10 @@ var client = new gateProto.GateControlService(
 // Asking user what they want to do
 var action = readlineSync.question(
     "What would you like to do?\n" +
-    "1 - Enter\n" + // Unary RPC
-    "2 - Notify exit\n" + // Unary RPC
-    "3 - Gate control\n" + // Bidirectional streaming
-)
+    "1 - Enter\n" +
+    "2 - Notify exit\n" +
+    "3 - Gate control\n"
+);
 
 action = parseInt(action);
 
@@ -37,7 +37,7 @@ if (action === 1) {
 }
 
 // Option 2: Unary RPC
-if (action === 2) {
+else if (action === 2) {
     var vehicleId = readlineSync.question("Enter your vehicle ID: ");
 
     client.NotifyExit({ vehicleId: vehicleId }, function (error, response) {
@@ -51,7 +51,7 @@ if (action === 2) {
 }
 
 // Option 3: Bidirectional streaming RPC
-if (action === 3) {
+else if (action === 3) {
     console.log("Starting gate control stream...");
     var stream = client.GateControl();
 
@@ -64,17 +64,25 @@ if (action === 3) {
         console.log("Stream ended by server");
     });
 
-    // Sending commands to server
-    while (true) {
-        var cmd = readlineSync.question("Enter command (open, close, or exit to stop): ");
-        
-        if (cmd === "exit") {
-            stream.end();
-            break;
-        }
+    // Non-blocking input using readline
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
 
-        stream.write({ action: cmd });
+    function ask() {
+        rl.question("Enter command (open, close, or exit to stop): ", function(cmd) {
+            if (cmd === "exit") {
+                stream.end();
+                rl.close();
+                return;
+            }
+
+            stream.write({ event: cmd });
+            ask(); // ask again
+        });
     }
-}else{
-    console.log("Invalid option");
+
+    ask();
 }

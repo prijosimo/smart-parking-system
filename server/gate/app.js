@@ -22,12 +22,12 @@ function GateControl(stream) {
     console.log("GateControl stream started")
 
     stream.on('data', function (command) {
-        console.log("Received command: ", command.action)
+        console.log("Received command: ", command.event)
 
-        if (command.action === "open") {
+        if (command.event === "open") {
             stream.write({ status: "Gate opening..." })
             setTimeout(() => stream.write({ status: "Gate opened" }), 1000)
-        }else if (command.action === "close") {
+        }else if (command.event === "close") {
             stream.write({ status: "Gate closing..." })
             setTimeout(() => stream.write({ status: "Gate closed" }), 1000)
         }else {
@@ -51,5 +51,4 @@ server.addService(gate_proto.GateControlService.service, {
 
 server.bindAsync("0.0.0.0:50052", grpc.ServerCredentials.createInsecure(), () => {
     console.log("Gate Control Server running on port 50052")
-    server.start()
 })

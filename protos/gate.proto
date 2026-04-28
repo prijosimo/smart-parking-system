@@ -5,7 +5,7 @@ package gate;
 service GateControlService {
     rpc RequestEntry(EntryRequest) returns (EntryResponse);
     rpc NotifyExit(ExitRequest) returns (ExitResponse);
-    rpc MonitorGate(stream GateEvent) returns (stream GateStatus);
+    rpc GateControl(stream GateEvent) returns (stream GateStatus);
 }
 
 message EntryRequest {
