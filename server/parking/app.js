@@ -17,7 +17,6 @@ function StreamOccupancyUpdates(call) {
     call.end()
 }
 
-
 // Creating and starting the gRPC server
 
 var server = new grpc.Server()

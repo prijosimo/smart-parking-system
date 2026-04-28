@@ -22,7 +22,7 @@ var action = readlineSync.question(
 
 action = parseInt(action);
 
-// Option 1: Unary RPC
+// Option 1: RequestEntry (Unary RPC)
 if (action === 1) {
     var vehicleId = readlineSync.question("Enter your vehicle ID: ");
 
@@ -36,7 +36,7 @@ if (action === 1) {
     });
 }
 
-// Option 2: Unary RPC
+// Option 2: NotifyExit (Unary RPC)
 else if (action === 2) {
     var vehicleId = readlineSync.question("Enter your vehicle ID: ");
 
@@ -50,7 +50,7 @@ else if (action === 2) {
     });
 }
 
-// Option 3: Bidirectional streaming RPC
+// Option 3: GateControl (Bidirectional streaming RPC)
 else if (action === 3) {
     console.log("Starting gate control stream...");
     var stream = client.GateControl();
