@@ -5,6 +5,25 @@ var PROTO_PATH = __dirname + '/../../protos/parking.proto'
 var packageDefinition = protoLoader.loadSync(PROTO_PATH)
 var parking_proto = grpc.loadPackageDefinition(packageDefinition).parking
 
+// Connecting to Naming Service
+var namingPackageDef = protoLoader.loadSync(__dirname + '/../../protos/naming.proto');
+var namingProto = grpc.loadPackageDefinition(namingPackageDef).naming;
+
+var namingClient = new namingProto.NamingService(
+    "0.0.0.0:50050",
+    grpc.credentials.createInsecure()
+);
+
+// Registering this service
+namingClient.RegisterService({
+    name: "ParkingSensorService",
+    host: "0.0.0.0",
+    port: 50051
+}, (err, res) => {
+    if (err) console.error("Registration error:", err);
+    else console.log(res.message);
+});
+
 // Unary RPC
 function CheckAvailability(call, callback) {
     callback(null, { freeSlots: 10 })

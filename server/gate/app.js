@@ -5,6 +5,25 @@ var PROTO_PATH = __dirname + '/../../protos/gate.proto'
 var packageDefinition = protoLoader.loadSync(PROTO_PATH)
 var gate_proto = grpc.loadPackageDefinition(packageDefinition).gate
 
+// Connecting to Naming Service
+var namingPackageDef = protoLoader.loadSync(__dirname + '/../../protos/naming.proto');
+var namingProto = grpc.loadPackageDefinition(namingPackageDef).naming;
+
+var namingClient = new namingProto.NamingService(
+    "0.0.0.0:50050",
+    grpc.credentials.createInsecure()
+);
+
+// Registering this service
+namingClient.RegisterService({
+    name: "GateControlService",
+    host: "0.0.0.0",
+    port: 50052
+}, (err, res) => {
+    if (err) console.error("Registration error:", err);
+    else console.log(res.message);
+});
+
 //Unary RPC
 function RequestEntry(call, callback) {
     console.log("Received entry request from vehicle: ", call.request.vehicleId)
@@ -51,4 +70,5 @@ server.addService(gate_proto.GateControlService.service, {
 
 server.bindAsync("0.0.0.0:50052", grpc.ServerCredentials.createInsecure(), () => {
     console.log("Gate Control Server running on port 50052")
+    server.start();
 })

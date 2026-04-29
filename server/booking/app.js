@@ -18,6 +18,25 @@ function CreateBooking(call, callback) {
     });
 }
 
+// Connecting to Naming Service
+var namingPackageDef = protoLoader.loadSync(__dirname + '/../../protos/naming.proto');
+var namingProto = grpc.loadPackageDefinition(namingPackageDef).naming;
+
+var namingClient = new namingProto.NamingService(
+    "0.0.0.0:50050",
+    grpc.credentials.createInsecure()
+);
+
+// Registering this service
+namingClient.RegisterService({
+    name: "BookingService",
+    host: "0.0.0.0",
+    port: 50053
+}, (err, res) => {
+    if (err) console.error("Registration error:", err);
+    else console.log(res.message);
+});
+
 // Unary RPC: CancelBooking
 function CancelBooking(call, callback) {
     console.log("Cancelling booking:", call.request.bookingId);
@@ -60,4 +79,5 @@ server.addService(booking_proto.BookingService.service, {
 
 server.bindAsync("0.0.0.0:50053", grpc.ServerCredentials.createInsecure(), () => {
     console.log("Booking Service running on port 50053");
+    server.start();
 });
