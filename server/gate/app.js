@@ -40,6 +40,11 @@ function NotifyExit(call, callback) {
 function GateControl(stream) {
     console.log("GateControl stream started")
 
+    // Error handling: client cancellation
+    stream.on('cancelled', () => {
+        console.log("Client cancelled the GateControl stream");
+    });
+
     stream.on('data', function (command) {
         console.log("Received command: ", command.event)
 

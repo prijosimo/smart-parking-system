@@ -31,6 +31,12 @@ function CheckAvailability(call, callback) {
 
 // Server-side streaming RPC
 function StreamOccupancyUpdates(call) {
+
+    // Error handling: client cancellation
+    call.on('cancelled', () => {
+        console.log("Client cancelled the occupancy stream");
+    });
+
     call.write({ message: "Slot 1 occupied" })
     call.write({ message: "Slot 3 free" })
     call.end()

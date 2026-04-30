@@ -51,6 +51,11 @@ function CancelBooking(call, callback) {
 function UploadBookingNotes(call, callback) {
     console.log("Receiving booking notes...");
 
+    // Error handling: client cancellation
+    call.on('cancelled', () => {
+        console.log("Client cancelled the notes upload stream");
+    });    
+
     let fullNotes = "";
 
     // Receive each chunk sent by the client
