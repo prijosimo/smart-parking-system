@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Distributed Systems - GUI Client</title>
+</head>
+<body>
+    <h1>Service Discovery & Control Panel</h1>
+
+    <button onclick="discoverServices()">Discover Services</button>
+    <pre id="discoveryOutput"></pre>
+
+    <h2>Booking Service</h2>
+    <input id="vehicleId" placeholder="Vehicle ID">
+    <input id="slotId" placeholder="Slot ID">
+    <button onclick="createBooking()">Create Booking</button>
+    <pre id="bookingOutput"></pre>
+
+    <h2>Parking Sensor Service</h2>
+    <button onclick="startParkingStream()">Start Occupancy Stream</button>
+    <pre id="parkingOutput"></pre>
+
+    <h2>Gate Control Service</h2>
+    <button onclick="sendGateOpen()">Open Gate</button>
+    <button onclick="sendGateClose()">Close Gate</button>
+    <pre id="gateOutput"></pre>
+
+    <script src="client.js"></script>
+</body>
+</html>
