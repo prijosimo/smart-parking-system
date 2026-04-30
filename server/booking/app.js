@@ -9,6 +9,25 @@ var booking_proto = grpc.loadPackageDefinition(packageDefinition).booking;
 function CreateBooking(call, callback) {
     console.log("Creating booking for vehicle:", call.request.vehicleId);
 
+    //Advanced feature: metadata and authentication
+    const token = call.metadata.get("auth-token")[0];
+
+    if (token !== "secret123") {
+        return callback({
+            code: grpc.status.UNAUTHENTICATED,
+            message: "Invalid or missing authentication token"
+        });
+    }
+
+
+    // Error handling: missing vehicleId
+    if (!call.request.vehicleId) {
+        return callback({
+            code: grpc.status.INVALID_ARGUMENT,
+            message: "Vehicle ID is required"
+        });
+    }
+
     // Generate a simple random booking ID
     const bookingId = "BKG-" + Math.floor(Math.random() * 10000);
 
