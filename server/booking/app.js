@@ -24,7 +24,7 @@ function CreateBooking(call, callback) {
     if (!call.request.vehicleId) {
         return callback({
             code: grpc.status.INVALID_ARGUMENT,
-            message: "Vehicle ID is required"
+            message: "Vehicle ID and Slot ID are required"
         });
     }
 
