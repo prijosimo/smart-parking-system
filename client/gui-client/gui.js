@@ -61,8 +61,8 @@ function handleMenu(choice) {
             return;
         default:
             console.log("Invalid option");
+            menu();
     }
-    setTimeout(menu, 500);
 }
 
 // Discovering services
@@ -81,6 +81,7 @@ function discoverServices() {
             else console.log(`${name}: ${res.host}:${res.port}`);
         });
     });
+    menu();
 }
 
 // Creating booking
@@ -99,6 +100,8 @@ function createBooking() {
                 client.CreateBooking({ vehicleId, slotId }, metadata, (err, response) => {
                     if (err) console.log("Error:", err.message);
                     else console.log("Booking created:", response);
+
+                    menu();
                 });
             });
         });
@@ -145,6 +148,7 @@ function sendGateCommand(command) {
 
         stream.on("end", () => {
             console.log("Gate stream ended");
+            menu();
         });
     });
 }
