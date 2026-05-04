@@ -41,7 +41,7 @@ function menu() {
 function handleMenu(choice) {
     switch (choice) {
         case "1":
-            discoverServices();
+            discoverServices(() => menu());
             break;
         case "2":
             createBooking();
@@ -66,7 +66,7 @@ function handleMenu(choice) {
 }
 
 // Discovering services
-function discoverServices() {
+function discoverServices(done) {
     console.log("\n--- Discovering Services ---");
 
     const services = [
@@ -75,13 +75,20 @@ function discoverServices() {
         "GateControlService"
     ];
 
+    let completed = 0;
+
     services.forEach(name => {
         namingClient.LookupService({ name }, (err, res) => {
             if (err) console.log(`${name}: ERROR - ${err.message}`);
             else console.log(`${name}: ${res.host}:${res.port}`);
+
+            completed++;
+
+            if (completed === services.length) {
+                done();
+            }
         });
     });
-    menu();
 }
 
 // Creating booking
