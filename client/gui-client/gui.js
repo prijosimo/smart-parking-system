@@ -133,12 +133,14 @@ function startParkingStream() {
 
         stream.on("end", () => {
             console.log("Stream ended");
+            menu();
         });
     });
 }
 
 // Gate commands
 function sendGateCommand(command) {
+
     namingClient.LookupService({ name: "GateControlService" }, (err, res) => {
         const client = new gateProto.GateControlService(
             `${res.host}:${res.port}`,
@@ -148,6 +150,7 @@ function sendGateCommand(command) {
         const stream = client.GateControl();
 
         stream.write({ event: command });
+        stream.end();
 
         stream.on("data", msg => {
             console.log("Gate Response:", msg.status);

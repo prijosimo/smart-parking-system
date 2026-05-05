@@ -50,12 +50,16 @@ function GateControl(stream) {
 
         if (command.event === "open") {
             stream.write({ status: "Gate opening..." })
-            setTimeout(() => stream.write({ status: "Gate opened" }), 1000)
-        }else if (command.event === "close") {
+            setTimeout(() => {
+                stream.write({ status: "Gate opened" })
+                stream.end()
+            }, 1000)
+        } else if (command.event === "close") {
             stream.write({ status: "Gate closing..." })
-            setTimeout(() => stream.write({ status: "Gate closed" }), 1000)
-        }else {
-            stream.write({ status: "Unknown command" })
+            setTimeout(() => {
+                stream.write({ status: "Gate closed" })
+                stream.end()
+            }, 1000)
         }
     })
 
