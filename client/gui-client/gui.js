@@ -34,6 +34,8 @@ function menu() {
     console.log("3. Start parking stream");
     console.log("4. Open gate");
     console.log("5. Close gate");
+    console.log("6. Cancel booking");
+    console.log("7. Upload booking notes");
     console.log("0. Exit");
     rl.question("Choose an option: ", handleMenu);
 }
@@ -54,6 +56,12 @@ function handleMenu(choice) {
             break;
         case "5":
             sendGateCommand("close");
+            break;
+        case "6":
+            cancelBooking();
+            break;
+        case "7":
+            uploadNotes();
             break;
         case "0":
             console.log("Goodbye!");
@@ -159,6 +167,52 @@ function sendGateCommand(command) {
         stream.on("end", () => {
             console.log("Gate stream ended");
             menu();
+        });
+    });
+}
+
+function cancelBooking() {
+    rl.question("Booking ID to cancel: ", bookingId => {
+
+        namingClient.LookupService({ name: "BookingService" }, (err, res) => {
+            const client = new bookingProto.BookingService(
+                `${res.host}:${res.port}`,
+                grpc.credentials.createInsecure()
+            );
+
+            client.CancelBooking({ bookingId }, (err, response) => {
+                if (err) console.log("Error:", err.message);
+                else console.log("Cancellation:", response.message);
+
+                menu();
+            });
+        });
+    });
+}
+
+function uploadNotes() {
+    namingClient.LookupService({ name: "BookingService" }, (err, res) => {
+        const client = new bookingProto.BookingService(
+            `${res.host}:${res.port}`,
+            grpc.credentials.createInsecure()
+        );
+
+        const stream = client.UploadBookingNotes((err, response) => {
+            if (err) console.log("Error:", err.message);
+            else console.log("Server:", response.message);
+
+            menu();
+        });
+
+        console.log("Type notes line by line. Type 'end' to finish.");
+
+        rl.on("line", input => {
+            if (input === "end") {
+                stream.end();
+                rl.removeAllListeners("line");
+            } else {
+                stream.write({ content: input });
+            }
         });
     });
 }
