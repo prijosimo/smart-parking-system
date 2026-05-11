@@ -41,10 +41,11 @@ The menu reappears after each action so the user can continue interacting with t
 npm install
 
 #### Start each microservice in its own terminal:
-node naming-server.js
-node booking-server.js
-node parking-server.js
-node gate-server.js
+smart-parking-system\naming-service > node app.js
+smart-parking-system\server\booking > node app.js
+smart-parking-system\server\gate > node app.js
+smart-parking-system\server\parking > node app.js
+
 
 #### Start the GUI client:
-node gui.js
+smart-parking-system\client\gui-client > node gui.js
